@@ -1,13 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ErrorStateMatcher } from "@angular/material";
-import { FormControl, FormGroupDirective, NgForm, Validator  } from "@angular/forms";
-import { Validators } from "@angular/forms";
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ErrorStateMatcher} from "@angular/material";
+import {FormControl, FormGroupDirective, NgForm, Validators} from "@angular/forms";
 
-
-export class FormErrorStateMatcher implements ErrorStateMatcher{
-  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean{
+export class FormErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const isSubmitted = form && form.submitted;
-    return !!(control && control.invalid && (control.dirty || isSubmitted));
+    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
   }
 }
 
@@ -18,29 +16,27 @@ export class FormErrorStateMatcher implements ErrorStateMatcher{
 })
 export class FormComponent implements OnInit {
 
-  @Output() onsubmit = new EventEmitter<any>();
+  @Output() onSubmit = new EventEmitter<any>();
   @Input() btnText: string;
 
-  emailFormControl = new FormControl('',[
+  emailFormControl = new FormControl('', [
     Validators.required,
     Validators.email
-    
   ]);
 
-  passwordFormControl = new FormControl('',[
-    Validators.required,    
-    
+  passwordFormControl = new FormControl('', [
+    Validators.required
   ]);
 
-  matche = new FormErrorStateMatcher();
+  matcher = new FormErrorStateMatcher();
+
 
   constructor() { }
 
   ngOnInit() {
   }
 
-  submit(email, password){
-    this.onsubmit.emit({email, password});
+  submit(email, password) {
+    this.onSubmit.emit({email, password});
   }
-
 }
