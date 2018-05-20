@@ -5,6 +5,7 @@ import { SnackService } from "@common/snack.service";
 import { AppService } from "@common/app.service";
 
 
+
 export class Auth{
   constructor(public email: string, public password: string){
 
@@ -27,4 +28,19 @@ export class LoginComponent{
   ngOnInit() {
   }
 
+  login(user: Auth){
+    this.appService.fireLoader();
+    this.auth.emailAndPassword(user.email, user.password).then(credentials =>{
+      this.router.navigate(['/shop']).then(() => {
+        this.appService.stopLoader();
+      }).catch(err => {
+      this.snackService.launch("Error: " + err.message, "LA ruta no existe", 5000);
+      this.appService.stopLoader();
+      })
+    })
+    .catch(err => {
+      this.snackService.launch("Error: " + err.message, "Inicio de sesión", 5000);
+      this.appService.stopLoader();
+      })
+  }  
 }
