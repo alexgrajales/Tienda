@@ -10,6 +10,8 @@ import { SharedModule } from "@shared/shared.module";
 import { AuthModule } from '@auth/auth.module';
 import { NavigationComponent } from '@common/navigation/navigation.component';
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { AdminModule } from '@admin/admin.module';
+
 
 @NgModule({
   declarations: [
@@ -24,6 +26,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
     SharedModule,
     AngularFirestoreModule,
     AuthModule,
+    AdminModule
   ],
   providers: [],
   bootstrap: [AppComponent]
