@@ -5,6 +5,7 @@ import { AuthService } from "@auth/auth.service";
 import { ProductsService } from "@common/products.service";
 import { SnackService } from "@common/snack.service";
 import { Product } from "../../models/product";
+import { error } from '@angular/compiler/src/util';
 
 @Component({
   selector: 'app-products-dialog',
@@ -24,6 +25,25 @@ export class ProductsDialogComponent {
     console.log(data);
   }
 
+  saveProduct(){
+    if(this.data.id){
+      this.productService.update(this.data).then(()=> {
+        this.snackService.launch("Producto actualizado", "Tienda", 4000);
+      })
+      .catch(error => {
+        this.snackService.launch("Error:"+ error.message, "Tienda", 4000);
+      })
+    }
+    else{
+      this.productService.save(this.data).then(()=>{
+        this.snackService.launch("Producto creado", "Tienda", 4000);
+      })
+      .catch(error => {
+        this.snackService.launch("Error:"+ error.message, "Tienda", 4000);
+      })
+    }
+    this.dialogRef.close();
+  }
   ngOnInit() {
   }
 

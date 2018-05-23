@@ -1,0 +1,13 @@
+<button mat-raised-button color="accent" (click)="addProduct()">Añadir Producto</button>
+<div class="mat-elevation-28">
+  <div>
+    <mat-form-field class="full-width">
+      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filtrar la tabla" />
+    </mat-form-field>
+  </div>
+
+  <mat-table #table [dataSource]="dataSource" matSort [trackBy]="trackById" class="animate">
+    
+  </mat-table>
+
+</div>

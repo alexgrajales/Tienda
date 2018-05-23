@@ -21,6 +21,7 @@ import { AdminRoutingModule } from './admin-routing.module';
 import {SharedModule} from "@shared/shared.module";
 import { AdminComponent } from './admin/admin.component';
 import { ProductsDialogComponent } from './products-dialog/products-dialog.component';
+import { ProductsComponent } from './products/products.component';
 
 @NgModule({
   imports: [
@@ -28,6 +29,7 @@ import { ProductsDialogComponent } from './products-dialog/products-dialog.compo
     AdminRoutingModule,
     SharedModule
   ],
-  declarations: [AdminComponent, ProductsDialogComponent],  
+  declarations: [AdminComponent, ProductsDialogComponent, ProductsComponent],  
+  entryComponents:[ProductsDialogComponent]
 })
 export class AdminModule { }
