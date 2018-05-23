@@ -13,7 +13,7 @@ import { ProductsDialogComponent } from "@admin/products-dialog//products-dialog
 })
 export class ProductsComponent {
   displayedColumns = ['name', 'price', 'description', 'edit', 'delete'];
-  datasource: MatTableDataSource<any>;
+  dataSource: MatTableDataSource<any>;
   @ViewChild(MatSort) sort:MatSort;
 
 
@@ -24,11 +24,39 @@ export class ProductsComponent {
     public auth: AuthService,
   ) { 
     this.productService.products().valueChanges().subscribe((data) =>{
-      this.datasource = new MatTableDataSource(data);
-      this.datasource.sort = this.sort;
+      this.dataSource = new MatTableDataSource(data);
+      this.dataSource.sort = this.sort;
     },
     err =>{
       this.snackService.launch("Error obteniendo productos: "+err.message, "Productos", 5000);
     })
+  }
+
+  applyFilter(filterValue){
+    filterValue = filterValue.trim();
+    filterValue = filterValue.toLowerCase();
+    this.dataSource.filter = filterValue;
+  }
+
+
+  trackById(index, product : Product){
+    return product.id;
+  }
+
+openDialog(product: Product){
+
+  this.dialog.open(ProductsDialogComponent, ProductsComponent.dialogConfig(product));
+}
+
+  addProduct(){
+    let product: Product = new Product;
+    this.dialog.open(ProductsDialogComponent, ProductsComponent.dialogConfig(product));
+  }
+
+  private static dialogConfig(data): MatDialogConfig{
+    const config: MatDialogConfig = new MatDialogConfig;
+    config.width = '700px';
+    config.data = data;
+    return config;
   }
 }
