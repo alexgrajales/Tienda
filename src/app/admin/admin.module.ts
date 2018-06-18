@@ -7,6 +7,7 @@ import { AdminComponent } from './admin/admin.component';
 import { ProductsDialogComponent } from './products-dialog/products-dialog.component';
 import { ProductsComponent } from './products/products.component';
 import { UploadService } from '@admin/upload.service';
+import { UploadFormComponent } from './upload-form/upload-form.component';
 
 @NgModule({
   imports: [
@@ -14,7 +15,7 @@ import { UploadService } from '@admin/upload.service';
     AdminRoutingModule,
     SharedModule
   ],
-  declarations: [AdminComponent, ProductsDialogComponent, ProductsComponent],  
+  declarations: [AdminComponent, ProductsDialogComponent, ProductsComponent, UploadFormComponent],  
   entryComponents: [ProductsDialogComponent],
   providers: [UploadService]
 })

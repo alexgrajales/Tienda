@@ -6,6 +6,8 @@ import { ProductsService } from "@common/products.service";
 import { SnackService } from "@common/snack.service";
 import { Product } from "../../models/product";
 import { error } from '@angular/compiler/src/util';
+import { UploadService } from "@admin/upload.service";
+import { Upload } from "app/models/upload";
 
 @Component({
   selector: 'app-products-dialog',
@@ -14,6 +16,8 @@ import { error } from '@angular/compiler/src/util';
 })
 export class ProductsDialogComponent {
 
+  uploads;
+
   constructor(
     private afs: AngularFirestore,
     public dialogRef: MatDialogRef<ProductsDialogComponent>,
@@ -21,8 +25,18 @@ export class ProductsDialogComponent {
     private snackService: SnackService,
     public auth: AuthService,
     private productService: ProductsService,
+    private uploadService: UploadService
   ) { 
-    console.log(data);
+    if(data.id){
+        this.uploads = this.productService.product(this.data.id).collection('uploads').snapshotChanges().map(actions => {
+          return actions.map(upload => {
+            const data = upload.payload.doc.data();
+            const id = upload.payload.doc.id;
+            return {id, ...data};
+          })
+        })
+    }
+    
   }
 
   saveProduct(){
@@ -43,6 +57,18 @@ export class ProductsDialogComponent {
       })
     }
     this.dialogRef.close();
+  }
+
+
+  removeUpload(upload: Upload){
+    this.uploadService.removeFile(upload.id).then(()=>{
+      this.afs.doc(`products/${this.data.id}/uploads/${upload.id}`).delete().then(()=>{
+        this.snackService.launch("Adjunto eliminado", "Shop", 4000);
+      })
+      .catch(error=>{
+        this.snackService.launch("Error:"+ error.message, "Tienda", 4000);
+      })
+    })
   }
   ngOnInit() {
   }

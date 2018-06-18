@@ -59,4 +59,10 @@ openDialog(product: Product){
     config.data = data;
     return config;
   }
+
+  remove(product: Product){
+    this.productService.remove(product.id).then(()=>{
+      this.snackService.launch('Producto eliminado correctamente', "Productos", 5000);
+    })
+  }
 }
