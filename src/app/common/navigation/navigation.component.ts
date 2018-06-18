@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '@auth/auth.service';
+import { CartService } from "@common/cart.service";
 
 @Component({
   selector: 'app-navigation',
@@ -7,12 +8,37 @@ import { AuthService } from '@auth/auth.service';
   styleUrls: ['./navigation.component.css']
 })
 export class NavigationComponent implements OnInit {
+  cart: any;
 
-  constructor(public auth: AuthService) { 
+  constructor(
+    public auth: AuthService,
+    public cartService: CartService
+  ) { 
     
   }
 
   ngOnInit() {
+    this.auth.user.subscribe(data=>{
+      if(data){
+        if(data.role === 'customer'){
+          const carRef = this.cartService.myCartRef(data.uid).get();
+          carRef.then((cart)=>{
+            if(cart.exists){
+              this.cartService.myCart(data.uid).subscribe(myCart=>{
+                this.cart = myCart.payload.data();
+              })
+            }
+            else{
+              this.cartService.createCart(data.uid)
+              this.cartService.myCart(data.uid).subscribe(myCart=>{
+                this.cart = myCart.payload.data();
+              })
+              
+            }
+          })
+        }        
+      }
+    })
   }
 
 }

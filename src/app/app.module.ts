@@ -11,6 +11,7 @@ import { AuthModule } from '@auth/auth.module';
 import { NavigationComponent } from '@common/navigation/navigation.component';
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { AdminModule } from '@admin/admin.module';
+import { ShopModule } from "@shop/shop.module";
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import { AdminModule } from '@admin/admin.module';
     SharedModule,
     AngularFirestoreModule,
     AuthModule,
-    AdminModule
+    AdminModule,
+    ShopModule
   ],
   providers: [],
   bootstrap: [AppComponent]
