@@ -47,5 +47,15 @@ export class ProductsComponent implements OnInit {
     .flatMap(products => Observable.combineLatest(products));
   }
 
+  addProduct(product: Product){
+    this.cartService.addProduct(product)
+    .then(()=>  {
+      this.snackService.launch('Producto añadido', "Productos", 3000);
+    })
+    .catch((error)=>{
+      this.snackService.launch('Error'+ error.message, "Productos", 3000);
+    })
+  }
+
 }
  

@@ -29,4 +29,56 @@ export class CartService {
   myCartRef(uid){
     return this.afs.collection<Cart>('carts').doc(uid).ref;
   }
+
+  addProduct(product): Promise<any>{
+    return new Promise((resolve, reject)=>{
+      this.auth.user.subscribe(data=>{
+        if(data){
+          const ref = this.myCartRef(data.uid);
+          ref.get().then(doc =>{
+            let cartData = doc.data();
+            let productsInCart = cartData.products;
+            const productToCart = {
+              id: product.id,
+              name: product.name,
+              qty: 1,
+              price: product.price
+            };
+            const exists = CartService.findProductByKey(productsInCart, 'id', product.id);
+            if(! exists){
+              productsInCart.push(productToCart);
+              cartData.totalProducts += 1;
+            }else{
+              exists.qty += 1;
+              cartData.totalProducts += 1;
+            }
+
+            return ref.update(cartData).then(()=>{
+              resolve(true);
+            }).catch((err)=>{
+              reject(err);
+            })
+          })
+        }
+
+      })
+    })
+  }
+
+  static findProductByKey(array, key, value){
+    for (let i=0; i<array.length; i++){
+      if (array[i][key]==value){
+        return array[i];
+      }
+    }
+    return null;
+  }
+
+  static totalProductsInCart(products: Product[]){
+    let sum = 0;
+    for(let i= 0; i< products.length; i++){
+      sum += parseInt(products[i]['qty']);
+    }
+    return sum;
+  }
 }
