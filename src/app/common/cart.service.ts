@@ -3,6 +3,8 @@ import {AuthService} from "@auth/auth.service";
 import {AngularFirestore} from "angularfire2/firestore";
 import {Cart} from "../models/cart";
 import {Product} from "../models/product";
+import { resolve } from 'dns';
+import { reject } from 'q';
 
 @Injectable({providedIn: 'root'})
 export class CartService {
@@ -68,9 +70,51 @@ export class CartService {
       ref.get().then(doc => {
         let cartData = doc.data();
         let productsInCart = cartData.products;
+        const exists = CartService.findProductByKey(productsInCart, 'id', product.id);
+        if(exists){
+          if(exists.qty != qty){
+            if(exists.qty < qty){
+              cartData.totalProducts = parseInt(cartData.totalProducts) + parseInt(qty)
+            }
+            else{
+              cartData.totalProducts = parseInt(cartData.totalProducts) - parseInt(qty)
+            }
+            return ref.update(cartData).then(()=>{
+              resolve(true);
+            }).catch((err)=>{
+              reject(err);
+            })
+          }
+        }
       })
     })
 
+  }
+
+  removeProduct(product, uid): Promise<any>{
+    return new Promise((resolve, reject) =>{
+      const ref = this.myCartRef(uid);
+      ref.get().then(doc => {
+        let cartData = doc.data();
+        let productsInCart = cartData.products;
+        let totalQty = cartData.totalProducts;
+        cartData.totalPrice = parseInt(totalQty)-parseInt(product.qty);
+
+        const exists = CartService.findProductByKey(productsInCart, 'id', product.id);
+        if(exists){
+          const index = productsInCart.finIndex(obj => obj.id === product.id);
+          cartData.product = [
+            ...productsInCart.slice(0, index),
+            ...productsInCart.slice(index+1)
+          ];
+          return ref.update(cartData).then(()=>{
+            resolve(true);
+          }).catch((err)=>{
+            reject(err);
+          })
+        }
+      })
+    })
   }
 
   static findProductByKey(array, key, value) {
@@ -99,4 +143,14 @@ export class CartService {
     }
     return total;
   }  
+
+  resetCart(uid): Promise<any>{
+    const ref = this.myCartRef(uid);
+    return ref.get().then(doc =>{
+      let cartData = doc.data();
+      cartData.products = [];
+      cartData.totalProducts = 0;
+      return ref.update(cartData);
+    })
+  }
 }

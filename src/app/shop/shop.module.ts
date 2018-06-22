@@ -6,6 +6,7 @@ import { ProductsComponent } from './products/products.component';
 import { SharedModule } from "@shared/shared.module";
 import { SlickModule } from "ngx-slick";
 import { ProductComponent } from './product/product.component';
+import { CartComponent } from './cart/cart.component';
 
 @NgModule({
   imports: [
@@ -14,6 +15,6 @@ import { ProductComponent } from './product/product.component';
     SharedModule,
     SlickModule.forRoot(),
   ],
-  declarations: [ProductsComponent, ProductComponent]
+  declarations: [ProductsComponent, ProductComponent, CartComponent]
 })
 export class ShopModule { }
