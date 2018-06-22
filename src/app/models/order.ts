@@ -6,7 +6,7 @@ export class Order {
     produts: Product[] = [];
     totalProducts: number=0;
     amount: number;
-    createad at: Date;
+    createadat: Date;
     constructor(){
         
     }
