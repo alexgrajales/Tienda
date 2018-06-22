@@ -62,6 +62,17 @@ export class CartService {
     })
   }
 
+  updateProduct(product, qty, uid): Promise<any>{
+    return new Promise((resolve, reject)=>{
+      const ref = this.myCartRef(uid);
+      ref.get().then(doc => {
+        let cartData = doc.data();
+        let productsInCart = cartData.products;
+      })
+    })
+
+  }
+
   static findProductByKey(array, key, value) {
     if(array != null){
       for (let i = 0; i < array.length; i++) {
